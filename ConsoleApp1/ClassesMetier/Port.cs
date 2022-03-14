@@ -159,19 +159,51 @@ namespace NavireHeritage.ClassesMetier
             this.navireEnAttente.Add(navire.Imo, navire);
         }
 
-        public bool estAttendu(string imo)
+        public bool estAttendu(string id)
         {
-            return this.navireAttendus.ContainsKey(imo);
+            return this.navireAttendus.ContainsKey(id);
         }
 
-        public bool estPresent(string imo)
+        public bool estPresent(string id)
         {
-            return this.navireArrives.ContainsKey(imo);
+            return this.navireArrives.ContainsKey(id);
         }
 
-        public bool estAttente(string imo)
+        public bool estAttente(string id)
         {
-            return this.navireEnAttente.ContainsKey(imo);
+            return this.navireEnAttente.ContainsKey(id);
+        }
+
+        public Navire getUnAttendu(string id)
+        {
+            if (!estAttendu(id))
+            {
+                throw new GestionPortException("Le navire n'est pas dans la liste des attendus");
+            }
+            return this.navireAttendus[id];
+        }
+
+        public Navire getUnArrive(string id)
+        {
+            if (!estPresent(id))
+            {
+                throw new GestionPortException("Le navire n'est pas présent dans le port");
+            }
+            return this.navireArrives[id];
+        }
+
+        public Navire getUnParti(string id)
+        {
+            if (!this.navirePartis.ContainsKey(id))
+            {
+                throw new GestionPortException("Le navire n'est pas dans la liste des navires partis récemment");
+            }
+            return this.navirePartis[id];
+        }
+
+        public int getNbTankerArrives()
+        {
+
         }
     }
 }
