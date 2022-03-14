@@ -59,7 +59,7 @@ namespace NavireHeritage.ClassesMetier
             {
                 if (value < 0)
                 {
-                    throw new Exception("Le nombre de portique ne peut pas être négatif");
+                    throw new GestionPortException("Le nombre de portique ne peut pas être négatif");
                 }
                 this.nbPortique = value;
             } 
@@ -73,7 +73,7 @@ namespace NavireHeritage.ClassesMetier
             {
                 if (value < 0)
                 {
-                    throw new Exception("Le nombre de quais passager ne peut pas être négatif");
+                    throw new GestionPortException("Le nombre de quais passager ne peut pas être négatif");
                 }
                 this.nbPortique = value;
             }
@@ -87,7 +87,7 @@ namespace NavireHeritage.ClassesMetier
             {
                 if (value < 0)
                 {
-                    throw new Exception("Le nombre de quais tanker ne peut pas être négatif");
+                    throw new GestionPortException("Le nombre de quais tanker ne peut pas être négatif");
                 }
                 this.nbPortique = value;
             }
@@ -101,10 +101,57 @@ namespace NavireHeritage.ClassesMetier
             {
                 if (value < 0)
                 {
-                    throw new Exception("Le nombre de quais super tanker ne peut pas être négatif");
+                    throw new GestionPortException("Le nombre de quais super tanker ne peut pas être négatif");
                 }
                 this.nbPortique = value;
             }
+        }
+
+        public void enregistrementArriveePrevue(Navire navire)
+        {
+            try
+            {
+                this.navireAttendus.Add(navire.Imo, navire);
+            }
+            catch(ArgumentException)
+            {
+                throw new GestionPortException("Le navire est déjà présent dans le dictionnaire.");
+            }
+        }
+
+        public void enregistrementArrivee(string id)
+        {
+            if (this.navireAttendus.TryGetValue(id, out Navire value))
+            {
+                this.navireArrives.Add(id, value);
+                this.navireAttendus.Remove(id);
+            }
+            else
+            {
+                throw new GestionPortException("Le navire n'est pas enregistré dans les arrivées prévues.");
+            }
+        }
+        public void enregistrementArrivee(Navire navire)
+        {
+            enregistrementArrivee(navire.Imo);
+        }
+
+        public void enregistrerDepart(string id)
+        {
+            if (this.navireArrives.TryGetValue(id, out Navire value))
+            {
+                this.navirePartis.Add(id, value);
+                this.navireArrives.Remove(id);
+            }
+            else
+            {
+                throw new GestionPortException("Le navire n'est pas présent dans le port.");
+            }
+        }
+
+        public void enregistrerDepart(Navire navire)
+        {
+            enregistrerDepart(navire.Imo);
         }
     }
 }
