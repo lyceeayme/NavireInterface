@@ -67,5 +67,22 @@ namespace NavireHeritage.ClassesMetier
                 this.Passagers.Add(pPassager.numPasseport, pPassager);
             }
         }
+
+        public List<Passager> debarquer(List<Passager> pPassagers)
+        {
+            List<Passager> inconnu = new List<Passager>();
+            foreach (Passager pPassager in pPassagers)
+            {
+                if (this.Passagers.ContainsKey(pPassager.numPasseport))
+                {
+                    this.Passagers.Remove(pPassager.numPasseport);
+                }
+                else
+                {
+                    inconnu.Add(pPassager);
+                }
+            }
+            return inconnu;
+        }
     }
 }
