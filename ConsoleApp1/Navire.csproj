@@ -48,6 +48,7 @@
     <Compile Include="ClassesMetier\Navire.cs" />
     <Compile Include="ClassesMetier\Passager.cs" />
     <Compile Include="ClassesMetier\Port.cs" />
+    <Compile Include="ClassesMetier\Stockage.cs" />
     <Compile Include="ClassesMetier\Tanker.cs" />
     <Compile Include="ClassesTechniques\Tests.cs" />
     <Compile Include="Exceptions\GestionPortException.cs" />
