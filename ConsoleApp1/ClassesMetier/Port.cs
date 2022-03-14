@@ -203,7 +203,41 @@ namespace NavireHeritage.ClassesMetier
 
         public int getNbTankerArrives()
         {
+            int cpt = 0;
+            foreach(Navire navire in this.navireArrives.Values)
+            {
+                if (navire is Tanker && navire.TonnageGT <= 130000)
+                {
+                    cpt++;
+                }
+            }
+            return cpt;
+        }
 
+        public int getNbSuperTankerArrives()
+        {
+            int cpt = 0;
+            foreach (Navire navire in this.navireArrives.Values)
+            {
+                if (navire is Tanker && navire.TonnageGT > 130000)
+                {
+                    cpt++;
+                }
+            }
+            return cpt;
+        }
+
+        public int getNbCargoArrives()
+        {
+            int cpt = 0;
+            foreach (Navire navire in this.navireArrives.Values)
+            {
+                if (navire is Cargo)
+                {
+                    cpt++;
+                }
+            }
+            return cpt;
         }
     }
 }
