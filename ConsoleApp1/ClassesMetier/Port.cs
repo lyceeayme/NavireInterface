@@ -153,5 +153,25 @@ namespace NavireHeritage.ClassesMetier
         {
             enregistrerDepart(navire.Imo);
         }
+
+        public void AjoutNavireEnAttente(Navire navire)
+        {
+            this.navireEnAttente.Add(navire.Imo, navire);
+        }
+
+        public bool estAttendu(string imo)
+        {
+            return this.navireAttendus.ContainsKey(imo);
+        }
+
+        public bool estPresent(string imo)
+        {
+            return this.navireArrives.ContainsKey(imo);
+        }
+
+        public bool estAttente(string imo)
+        {
+            return this.navireEnAttente.ContainsKey(imo);
+        }
     }
 }
