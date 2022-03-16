@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Station.Interfaces
 {
-    class INavCommercable
+    interface INavCommercable
     {
+        void decharger();
+
+        void charger();
     }
 }
