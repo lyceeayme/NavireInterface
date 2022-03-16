@@ -330,17 +330,20 @@ namespace NavireHeritage.ClassesMetier
                 Navire navire = getUnEnAttente(id);
                 if (navire is Cargo && this.NbPortique - this.getNbCargoArrives() > 0)
                 {
-                    this.navireArrives.Add(navire.Imo, navire);
+                    this.navireArrives.Add(id, navire);
+                    this.navireEnAttente.Remove(id);
                 }
                 else if (navire is Tanker)
                 {
                     if (navire is Tanker && navire.TonnageDT > 130000 && this.nbQuaisSuperTanker - this.getNbSuperTankerArrives() > 0)
                     {
-                        this.navireArrives.Add(navire.Imo, navire);
+                        this.navireArrives.Add(id, navire);
+                        this.navireEnAttente.Remove(id);
                     }
                     else if (navire is Tanker && navire.TonnageDT <= 130000 && this.nbQuaisSuperTanker - this.getNbSuperTankerArrives() > 0)
                     {
-                        this.navireArrives.Add(navire.Imo, navire);
+                        this.navireArrives.Add(id, navire);
+                        this.navireEnAttente.Remove(id);
                     }
                 }
                 else
@@ -348,17 +351,17 @@ namespace NavireHeritage.ClassesMetier
                     navire = getUnAttendu(id);
                     if (navire is Croisiere)
                     {
-                        this.navireArrives.Add(navire.Imo, navire);
+                        this.navireArrives.Add(id, navire);
                     }
                     else if (navire is Cargo)
                     {
                         if (this.nbPortique - this.getNbCargoArrives() > 0)
                         {
-                            this.navireArrives.Add(navire.Imo, navire);
+                            this.navireArrives.Add(id, navire);
                         }
                         else
                         {
-                            this.navireEnAttente.Add(navire.Imo, navire);
+                            this.navireEnAttente.Add(id, navire);
                         }
                     }
                     else if (navire is Tanker)
@@ -368,11 +371,11 @@ namespace NavireHeritage.ClassesMetier
                         {
                             if(this.nbQuaisSuperTanker - this.getNbSuperTankerArrives() > 0)
                             {
-                                this.navireArrives.Add(navire.Imo, navire);
+                                this.navireArrives.Add(id, navire);
                             }
                             else
                             {
-                                this.navireEnAttente.Add(navire.Imo, navire);
+                                this.navireEnAttente.Add(id, navire);
                             }
                         }
                         else
@@ -380,14 +383,15 @@ namespace NavireHeritage.ClassesMetier
                         {
                             if(this.nbQuaisTanker - this.getNbTankerArrives() > 0)
                             {
-                                this.navireArrives.Add(navire.Imo, navire);
+                                this.navireArrives.Add(id, navire);
                             }
                             else
                             {
-                                this.navireEnAttente.Add(navire.Imo, navire);
+                                this.navireEnAttente.Add(id, navire);
                             }
                         }
                     }
+                    this.navireAttendus.Remove(id);
                 }
             }
         }
