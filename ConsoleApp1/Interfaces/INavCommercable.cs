@@ -8,8 +8,8 @@ namespace Station.Interfaces
 {
     interface INavCommercable
     {
-        void decharger();
+        void decharger(int quantite);
 
-        void charger();
+        void charger(int quantite);
     }
 }

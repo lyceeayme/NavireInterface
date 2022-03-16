@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GestionNavire.Exceptions;
+using Station.Interfaces;
 
 namespace NavireHeritage.ClassesMetier
 {
-    public class Port
+    public class Port : IStationnable
     {
         private readonly string nom;
         private readonly string latitude;
@@ -75,7 +76,7 @@ namespace NavireHeritage.ClassesMetier
                 {
                     throw new GestionPortException("Le nombre de quais passager ne peut pas être négatif");
                 }
-                this.nbPortique = value;
+                this.nbQuaisPassager = value;
             }
         }
 
@@ -89,7 +90,7 @@ namespace NavireHeritage.ClassesMetier
                 {
                     throw new GestionPortException("Le nombre de quais tanker ne peut pas être négatif");
                 }
-                this.nbPortique = value;
+                this.nbQuaisTanker = value;
             }
         }
 
@@ -103,11 +104,11 @@ namespace NavireHeritage.ClassesMetier
                 {
                     throw new GestionPortException("Le nombre de quais super tanker ne peut pas être négatif");
                 }
-                this.nbPortique = value;
+                this.nbQuaisSuperTanker = value;
             }
         }
 
-        public void enregistrementArriveePrevue(Navire navire)
+        public void enregistrerArriveePrevue(Navire navire)
         {
             try
             {
@@ -119,21 +120,26 @@ namespace NavireHeritage.ClassesMetier
             }
         }
 
-        public void enregistrementArrivee(string id)
+        public void enregistrerArrivee(string id)
         {
-            if (this.navireAttendus.TryGetValue(id, out Navire value))
+            if (estAttendu(id))
             {
-                this.navireArrives.Add(id, value);
+                this.navireArrives.Add(id, this.navireAttendus[id]);
                 this.navireAttendus.Remove(id);
+            }
+            else if (estAttente(id))
+            {
+                this.navireArrives.Add(id, this.navireEnAttente[id]);
+                this.navireEnAttente.Remove(id);
             }
             else
             {
-                throw new GestionPortException("Le navire n'est pas enregistré dans les arrivées prévues.");
+                throw new GestionPortException("Le navire n'est pas enregistré dans les arrivées prévues ni en attente.");
             }
         }
-        public void enregistrementArrivee(Navire navire)
+        public void enregistrerArrivee(Navire navire)
         {
-            enregistrementArrivee(navire.Imo);
+            enregistrerArrivee(navire.Imo);
         }
 
         public void enregistrerDepart(string id)
@@ -174,6 +180,11 @@ namespace NavireHeritage.ClassesMetier
             return this.navireEnAttente.ContainsKey(id);
         }
 
+        public bool estParti(string id)
+        {
+            return this.navirePartis.ContainsKey(id);
+        }
+
         public Navire getUnAttendu(string id)
         {
             if (!estAttendu(id))
@@ -206,7 +217,7 @@ namespace NavireHeritage.ClassesMetier
             int cpt = 0;
             foreach(Navire navire in this.navireArrives.Values)
             {
-                if (navire is Tanker && navire.TonnageGT <= 130000)
+                if (navire is Tanker && navire.TonnageDT <= 130000)
                 {
                     cpt++;
                 }
@@ -219,7 +230,7 @@ namespace NavireHeritage.ClassesMetier
             int cpt = 0;
             foreach (Navire navire in this.navireArrives.Values)
             {
-                if (navire is Tanker && navire.TonnageGT > 130000)
+                if (navire is Tanker && navire.TonnageDT > 130000)
                 {
                     cpt++;
                 }
@@ -238,6 +249,51 @@ namespace NavireHeritage.ClassesMetier
                 }
             }
             return cpt;
+        }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "--------------------------------------------------------\n"+
+                this.nom+"\n"+
+                "\t Coordonnées GPS : {0} / {1} \n"+
+                "\t Nb portiques : {2} \n"+
+                "\t Nb quais croisière : {3} \n"+
+                "\t Nb quais tankers : {4} \n"+
+                "\t Nb quais super tankers : {5} \n"+
+                "\t Nb Navires à quais : {6} \n"+
+                "\t Nb Navires attendus : {7} \n"+
+                "\t Nb Navires à partis : {8} \n"+
+                "\t Nb Navires en attente : {9} \n\n" +
+                "Nombre de cargos dans le port : {10} \n" +
+                "Nombre de tankers dans le port : {11} \n" +
+                "Nombre de super tankers dans le port : {12} \n" +
+                "\t-------------------------------\n"+
+                listebateauattente(),
+                this.latitude,
+                this.longitude,
+                this.nbPortique,
+                this.nbQuaisPassager,
+                this.nbQuaisTanker,
+                this.nbQuaisSuperTanker,
+                this.navireArrives.Count,
+                this.navireAttendus.Count,
+                this.navirePartis.Count,
+                this.navireEnAttente.Count,
+                this.getNbCargoArrives(),
+                this.getNbTankerArrives(),
+                this.getNbSuperTankerArrives()
+                );
+        }
+
+        public string listebateauattente()
+        {
+            string message = "Liste des bateaux en attente de leur arrivée :\n";
+            foreach (Navire navire in this.navireAttendus.Values)
+            {
+                message = message +"\t"+ navire.ToString() + "\n";
+            }
+            return message;
         }
     }
 }

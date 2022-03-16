@@ -1,8 +1,9 @@
 ﻿using GestionNavire.Exceptions;
+using Station.Interfaces;
 
 namespace NavireHeritage.ClassesMetier
 {
-    public class Tanker : Navire
+    public class Tanker : Navire, INavCommercable
     {
         private readonly string typeFluide;
 
@@ -33,7 +34,7 @@ namespace NavireHeritage.ClassesMetier
             }
         }
 
-        public void charge(int pQuantite)
+        public void charger(int pQuantite)
         {
             if (pQuantite < 0)
             {
@@ -47,6 +48,11 @@ namespace NavireHeritage.ClassesMetier
                 }
                 this.tonnageActuel -= pQuantite;
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format(base.ToString() + this.typeFluide);
         }
     }
 }

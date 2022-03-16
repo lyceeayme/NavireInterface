@@ -1,5 +1,6 @@
 ﻿using GestionNavire.Exceptions;
 using System.Text.RegularExpressions;
+using System;
 
 namespace NavireHeritage.ClassesMetier
 {
@@ -13,7 +14,7 @@ namespace NavireHeritage.ClassesMetier
         protected readonly int tonnageDT;
         protected readonly int tonnageDWT;
 
-        protected Navire(string imo, string nom, string latitude, string longitude, int tonnageActuel, int tonnageGT, int tonnageDWT)
+        protected Navire(string imo, string nom, string latitude, string longitude, int tonnageActuel, int tonnageDT, int tonnageDWT)
         {
             string pattern = @"IMO\d{7}";
             if (Regex.IsMatch(imo, pattern))
@@ -27,8 +28,8 @@ namespace NavireHeritage.ClassesMetier
             this.nom = nom;
             this.Latitude = latitude;
             this.Longitude = longitude;
+            this.tonnageDT = tonnageDT;
             this.TonnageActuel = tonnageActuel;
-            this.tonnageDT = tonnageGT;
             this.tonnageDWT = tonnageDWT;
         }
 
@@ -72,11 +73,18 @@ namespace NavireHeritage.ClassesMetier
         /// <summary>
         /// Gets le tonnage maximal du navire.
         /// </summary>
-        public int TonnageGT => this.tonnageDT;
+        public int TonnageDT { get => this.tonnageDT; }
 
         /// <summary>
         /// Gets le poid total du navire rempli le plus possible(personnes, nourriture, tonnageactuelle).
         /// </summary>
         public int TonnageDWT { get => this.tonnageDWT; }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "{0}\t{1} : ",this.imo,this.nom
+                );
+        }
     }
 }
