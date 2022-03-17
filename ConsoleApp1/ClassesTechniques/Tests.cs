@@ -32,7 +32,7 @@ namespace NavireHeritage.ClassesTechniques
         {
             try
             {
-                port.enregistrerArriveee(imo);
+                port.enregistrerArrivee(imo);
                 Console.WriteLine("navire " + imo + " arrivé");
             }
             catch(Exception ex)
@@ -56,11 +56,11 @@ namespace NavireHeritage.ClassesTechniques
 
                 // ENREGISTREMENT
                 string imo = "IMO9780859";
-                port.enregistrerArriveee(imo);
+                port.enregistrerArrivee(imo);
                 imo = "IMO9250097";
-                port.enregistrerArriveee(imo);
+                port.enregistrerArrivee(imo);
                 imo = "IMO9250096";
-                port.enregistrerArriveee(imo);
+                port.enregistrerArrivee(imo);
 
                 Console.WriteLine(port);
             }
@@ -81,9 +81,9 @@ namespace NavireHeritage.ClassesTechniques
                 port.enregistrerArriveePrevue(new Tanker("IMO9250095", "Tanker2", "54.35412N", "5.3644", 110000, 110000, 0, "Petrole"));
                 port.enregistrerArriveePrevue(new Tanker("IMO9250094", "Tanker3", "54.35412N", "5.3644", 110000, 110000, 0, "Petrole"));
                 // ENREGISTREMENT
-                port.enregistrerArriveee("IMO9250096");
-                port.enregistrerArriveee("IMO9250095");
-                port.enregistrerArriveee("IMO9250094");
+                port.enregistrerArrivee("IMO9250096");
+                port.enregistrerArrivee("IMO9250095");
+                port.enregistrerArrivee("IMO9250094");
 
                 Console.WriteLine(port);
             }

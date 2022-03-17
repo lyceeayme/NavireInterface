@@ -47,9 +47,36 @@ namespace NavireHeritage.ClassesMetier
             {
                 if (value < 0)
                 {
-                    throw new GestionPortException("");
+                    throw new GestionPortException("La capacite de la zone ne peut pas être négative");
                 }
+                this.capaciteDispo = value;
             }
+        }
+
+        public void Charger(int pQuantite)
+        {
+            if(pQuantite < 0)
+            {
+                throw new GestionPortException("On ne peut pas charger une valeur négative");
+            }
+            else if (this.capaciteDispo - pQuantite < 0)
+            {
+                throw new GestionPortException("On ne peut pas stocker plus que la capacite maximum");
+            }
+            this.capaciteDispo -= pQuantite;
+        }
+
+        public void Decharger(int pQuantite)
+        {
+            if (pQuantite < 0)
+            {
+                throw new GestionPortException("On ne peut pas charger une valeur négative");
+            }
+            else if (this.capaciteDispo + pQuantite > this.capaciteMaxi)
+            {
+                throw new GestionPortException("On ne peut pas decharger ce qui n'existe pas");
+            }
+            this.capaciteDispo += pQuantite;
         }
     }
 }

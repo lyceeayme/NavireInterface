@@ -21,6 +21,7 @@ namespace NavireHeritage.ClassesMetier
         private Dictionary<string, Navire> navireArrives;
         private Dictionary<string, Navire> navirePartis;
         private Dictionary<string, Navire> navireEnAttente;
+        private Dictionary<int, Stockage> Stockages;
 
         public Port(string nom, string latitude, string longitude, int nbPortique, int nbQuaisPassager, int nbQuaisTanker, int nbQuaisSuperTanker)
         {
@@ -35,6 +36,7 @@ namespace NavireHeritage.ClassesMetier
             this.navireArrives = new Dictionary<string, Navire>();
             this.navirePartis = new Dictionary<string, Navire>();
             this.navireEnAttente = new Dictionary<string, Navire>();
+            this.Stockages = new Dictionary<int, Stockage>();
         }
 
         /// <summary>
@@ -128,7 +130,7 @@ namespace NavireHeritage.ClassesMetier
             }
         }
 
-        public void enregistrerArrivee(string id)
+        public void enregistrerArriveee(string id)
         {
 
             if (estAttendu(id))
@@ -414,7 +416,7 @@ namespace NavireHeritage.ClassesMetier
             this.navireAttendus.Remove(id);
         }
 
-        public void enregistrerArriveee(string id)
+        public void enregistrerArrivee(string id)
         {
             if (!this.estAttendu(id) || this.estAttente(id))
             {
@@ -428,6 +430,25 @@ namespace NavireHeritage.ClassesMetier
             {
                 AjoutNavireAttendu(id);
             }
+        }
+
+        private bool EstDechargeable(Navire navire)
+        {
+            int capadispostock = 0;
+            foreach (Stockage stock in this.Stockages.Values)
+            {
+                capadispostock += stock.CapaciteDispo;
+            }
+            return capadispostock > navire.TonnageActuel;
+        }
+
+        public void Dechargement(Navire navire)
+        {
+            if (!EstDechargeable(navire))
+            {
+                throw new GestionPortException("Le navire a une trop grosse cargaison pour le port");
+            }
+
         }
     } 
 }
