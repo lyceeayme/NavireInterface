@@ -8,14 +8,14 @@ namespace NavireHeritage
     {
         static void Main()
         {
-            Port port = new Port("Marseille", "43.2976N", "5.3471E", 4, 3, 2, 4);
+            // Port port = new Port("Marseille", "43.2976N", "5.3471E", 4, 3, 2, 4);
             //Tests.TestInit();
-            //Tests.chargementInitial();
+            Tests.chargementInitial();
 
             //Tests.TestEnregistrerArrivee(port, "IMO9241061");
             //Tests.TestEnregistrerArriveeV2();
             //Tests.TestEnregistrerTropTanker();
-            Tests.TestDistance();
+            //Tests.TestDistance();
 
             Console.ReadKey();
         }

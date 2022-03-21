@@ -12,7 +12,8 @@ namespace NavireHeritage.ClassesMetier
 {
     public class Port : IStationnable
     {
-        private static int ValueTanker = Convert.ToInt32(ConfigurationSettings.AppSettings.Get(ValueTanker));
+        private static readonly int ValueTanker = Convert.ToInt32(ConfigurationManager.AppSettings["ValueLimitTanker"]);
+        //private int ValueTanker = 130000;
         private readonly string nom;
         private readonly string latitude;
         private readonly string longitude;
