@@ -14,7 +14,8 @@ namespace NavireHeritage
 
             //Tests.TestEnregistrerArrivee(port, "IMO9241061");
             //Tests.TestEnregistrerArriveeV2();
-            Tests.TestEnregistrerTropTanker();
+            //Tests.TestEnregistrerTropTanker();
+            Tests.TestDistance();
 
             Console.ReadKey();
         }

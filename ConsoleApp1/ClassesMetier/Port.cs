@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -130,24 +131,24 @@ namespace NavireHeritage.ClassesMetier
             }
         }
 
-        public void enregistrerArriveee(string id)
-        {
+        //public void enregistrerArriveee(string id)
+        //{
 
-            if (estAttendu(id))
-            {
-                this.navireArrives.Add(id, this.navireAttendus[id]);
-                this.navireAttendus.Remove(id);
-            }
-            else if (estAttente(id))
-            {
-                this.navireArrives.Add(id, this.navireEnAttente[id]);
-                this.navireEnAttente.Remove(id);
-            }
-            else
-            {
-                throw new GestionPortException("Le navire n'est pas enregistré dans les arrivées prévues ni en attente.");
-            }
-        }
+        //    if (estAttendu(id))
+        //    {
+        //        this.navireArrives.Add(id, this.navireAttendus[id]);
+        //        this.navireAttendus.Remove(id);
+        //    }
+        //    else if (estAttente(id))
+        //    {
+        //        this.navireArrives.Add(id, this.navireEnAttente[id]);
+        //        this.navireEnAttente.Remove(id);
+        //    }
+        //    else
+        //    {
+        //        throw new GestionPortException("Le navire n'est pas enregistré dans les arrivées prévues ni en attente.");
+        //    }
+        //}
         public void enregistrerArrivee(Navire navire)
         {
             enregistrerArrivee(navire.Imo);
@@ -161,7 +162,19 @@ namespace NavireHeritage.ClassesMetier
                 this.navireArrives.Remove(id);
                 if (this.navireEnAttente.Count != 0)
                 {
-                    this.enregistrerArrivee(this.navireEnAttente.First().Key);
+                    int i = 0;
+                    while (i < this.navireEnAttente.Count && this.navireEnAttente.ElementAt(i).Value.GetType().FullName == value.GetType().FullName)
+                    {
+                        i++;
+                        if (this.navireEnAttente.ElementAt(i).Value.GetType() is Tanker
+                            && value.GetType() is Tanker
+                            && this.navireEnAttente.ElementAt(i).Value.TonnageDT <= 130000 != value.TonnageDT <= 130000)
+                        {
+                            i++;
+                        }
+                    }
+                    this.navireArrives.Add(this.navireEnAttente.ElementAt(i).Key, this.navireEnAttente.ElementAt(i).Value);
+                    this.navireEnAttente.Remove(this.navireEnAttente.ElementAt(i).Key);
                 }
             }
             else
@@ -365,7 +378,6 @@ namespace NavireHeritage.ClassesMetier
                     this.navireEnAttente.Remove(id);
                 }
             }
-
         }
 
         private void AjoutNavireAttendu(string id)
@@ -377,7 +389,7 @@ namespace NavireHeritage.ClassesMetier
             }
             else if (navire is Cargo)
             {
-                if (this.nbPortique - this.getNbCargoArrives() > 0)
+                if (this.nbPortique > this.getNbCargoArrives())
                 {
                     this.navireArrives.Add(id, navire);
                 }
@@ -391,7 +403,7 @@ namespace NavireHeritage.ClassesMetier
                 if (navire.TonnageDT > 130000)
                 // si super tanker
                 {
-                    if (this.nbQuaisSuperTanker - this.getNbSuperTankerArrives() > 0)
+                    if (this.nbQuaisSuperTanker > this.getNbSuperTankerArrives())
                     {
                         this.navireArrives.Add(id, navire);
                     }
@@ -403,7 +415,7 @@ namespace NavireHeritage.ClassesMetier
                 else
                 // si tanker
                 {
-                    if (this.nbQuaisTanker - this.getNbTankerArrives() > 0)
+                    if (this.nbQuaisTanker > this.getNbTankerArrives())
                     {
                         this.navireArrives.Add(id, navire);
                     }
@@ -418,7 +430,7 @@ namespace NavireHeritage.ClassesMetier
 
         public void enregistrerArrivee(string id)
         {
-            if (!this.estAttendu(id) || this.estAttente(id))
+            if (!this.estAttendu(id) || !this.estAttente(id))
             {
                 throw new GestionPortException("Le navire n'est pas enregistré dans les arrivées prévues ni en attente.");
             }
@@ -442,6 +454,36 @@ namespace NavireHeritage.ClassesMetier
             return capadispostock > navire.TonnageActuel;
         }
 
+        private int Getdistance(Navire navire, Stockage stock)
+        {
+            if (navire.TonnageActuel > stock.CapaciteDispo)
+            {
+                return navire.TonnageActuel - stock.CapaciteDispo;
+            }
+            else
+            {
+                return stock.CapaciteDispo - navire.TonnageActuel;
+            }
+        }
+
+        private int GetZoneplusproche(Navire navire)
+        {
+            int zone = this.Stockages.First().Key;
+            int distance = Getdistance(navire, this.Stockages[zone]);
+            foreach (Stockage stock in this.Stockages.Values)
+            {
+                if (navire.TonnageActuel == stock.CapaciteDispo)
+                {
+                    return stock.Numero;
+                }
+                else if( Getdistance(navire,stock) < distance)
+                {
+                    zone = stock.Numero;
+                }
+            }
+            return zone;
+        }
+
         public void Dechargement(Navire navire)
         {
             if (!EstDechargeable(navire))
@@ -449,6 +491,13 @@ namespace NavireHeritage.ClassesMetier
                 throw new GestionPortException("Le navire a une trop grosse cargaison pour le port");
             }
 
+        }
+
+        public double GetMilesToArrival(Navire navire)
+        {
+            GeoCoordinate Gpsnav = new GeoCoordinate(Convert.ToDouble(navire.Latitude), Convert.ToDouble(navire.Longitude));
+            GeoCoordinate Gpsport = new GeoCoordinate(Convert.ToDouble(this.latitude), Convert.ToDouble(this.longitude));
+            return Gpsnav.GetDistanceTo(Gpsport);
         }
     } 
 }

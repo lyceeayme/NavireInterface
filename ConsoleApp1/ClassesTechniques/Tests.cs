@@ -92,5 +92,24 @@ namespace NavireHeritage.ClassesTechniques
                 Console.WriteLine(ex.Message);
             }
         }
+
+        public static void TestDistance()
+        {
+            try
+            {
+                // PORT
+                Port port = new Port("Marseille", "43.2976N", "5.3471E", 4, 3, 2, 4);
+                // NAVIRES
+                Cargo navire = new Cargo("IMO9250098", "CONTAINERSHIPS VII", "54.35412N", "5.3644", 10499, 56000, 60000, "Porte-conteneurs");
+                port.enregistrerArriveePrevue(new Tanker("IMO9250096", "Tanker1", "54.35412N", "5.3644", 110000, 110000, 0, "Petrole"));
+                port.enregistrerArriveePrevue(navire);
+
+                Console.WriteLine(port.GetMilesToArrival(navire));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }
