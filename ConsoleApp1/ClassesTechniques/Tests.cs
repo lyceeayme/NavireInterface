@@ -1,25 +1,32 @@
-﻿using System;
+﻿using GestionNavire.Exceptions;
 using NavireHeritage.ClassesMetier;
-using GestionNavire.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace NavireHeritage.ClassesTechniques
 {
-    internal abstract class Tests
+    public abstract class Test
     {
-        public static void TestInit()
+        public static void ChargementInitial(Port port)
         {
-            Port port = new Port("Marseille", "43.2976N", "5.3471E", 4, 3, 2, 4);
-            Console.WriteLine(port);
-        }
-
-        public static void chargementInitial()
-        {
-            Port port = new Port("Marseille", "43.2976N", "5.3471E", 4, 3, 2, 4);
             try
             {
-                port.enregistrerArriveePrevue(new Cargo("IMO9780859", "CMA CGM A. LINCOLN", "43.43279N", "134.76258W", 140872, 148992, 123000, "marchandises diverses"));
-                port.enregistrerArriveePrevue(new Cargo("IMO9250098", "CONTAINERSHIPS VII", "54.35412N", "5.3644", 10499, 56000, 60000, "Porte-conteneurs"));
-                Console.WriteLine(port);
+                port.enregistrerArriveePrevue(new Cargo("IMO9780859", "CMA CGM A. LINCOLN", "43.43279 N", "134.76258 W", 140872, 148992, 123000, "marchandise diverses"));
+                port.enregistrerArriveePrevue(new Cargo("IMO9250098", "CONTAINERSHIPS VII", "43.43279 N", "134.76258 W", 140872, 148992, 123000, "marchandise diverses"));
+                port.enregistrerArriveePrevue(new Cargo("IMO9502910", "MAERSK EMERALD", "43.43279 N", "134.76258 W", 140872, 148992, 123000, "marchandise diverses"));
+
+                port.enregistrerArriveePrevue(new Croisiere("IMO9241061", "RMS QUEEN MARY 2", "43.43279 N", "134.76258 W", "V", 500));
+                port.enregistrerArriveePrevue(new Croisiere("IMO9803613", "MSC GRANDIOSA", "43.43279 N", "134.76258 W",  "M", 500));
+                port.enregistrerArriveePrevue(new Croisiere("IMO9351476", "CRUISE ROMA", "43.43279 N", "134.76258 W", "M", 500));
+
+                port.enregistrerArriveePrevue(new Tanker("IMO9334076", "EJNAN", "43.43279 N", "134.76258 W", 98000, 100000, 123000, "marchandise diverses"));
+                port.enregistrerArriveePrevue(new Tanker("IMO9380374", "CITRUS", "43.43279 N", "134.76258 W", 140872, 148992, 123000, "marchandise diverses"));
+                port.enregistrerArriveePrevue(new Tanker("IMO9220952", "HARAD", "43.43279 N", "134.76258 W", 140872, 148992, 123000, "marchandise diverses"));
+                port.enregistrerArriveePrevue(new Tanker("IMO9197832", "KALAMOS", "43.43279 N", "134.76258 W", 140872, 148992, 123000, "marchandise diverses"));
+                port.enregistrerArriveePrevue(new Tanker("IMO9379715", "NEW DRAGON", "43.43279 N", "134.76258 W", 140872, 148992, 123000, "marchandise diverses"));
 
             }
             catch (GestionPortException ex)
@@ -28,83 +35,42 @@ namespace NavireHeritage.ClassesTechniques
             }
         }
 
-        public static void TestEnregistrerArrivee(Port port, string imo)
+        public static void AfficheAttendus(Port port)
         {
-            try
-            {
-                port.enregistrerArrivee(imo);
-                Console.WriteLine("navire " + imo + " arrivé");
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            Console.WriteLine(port);
         }
 
-        public static void TestEnregistrerArriveeV2()
+        public static void TestEnregistrerArriveePrevue(Port port, Navire navire)
         {
             try
             {
-                // PORT
-                Port port = new Port("Marseille", "43.2976N", "5.3471E", 4, 3, 2, 4);
-
-                // NAVIRES
-                port.enregistrerArriveePrevue(new Cargo("IMO9780859", "CMA CGM A. LINCOLN", "43.43279N", "134.76258W", 140872, 148992, 123000, "marchandises diverses"));
-                port.enregistrerArriveePrevue(new Cargo("IMO9250098", "CONTAINERSHIPS VII", "54.35412N", "5.3644", 10499, 56000, 60000, "Porte-conteneurs"));
-                port.enregistrerArriveePrevue(new Tanker("IMO9250097", "Super Tanker", "54.35412N", "5.3644", 140000, 150000, 0, "Hydrocarbure"));
-                port.enregistrerArriveePrevue(new Tanker("IMO9250096", "Tanker", "54.35412N", "5.3644", 110000, 110000, 0, "Petrole"));
-
-                // ENREGISTREMENT
-                string imo = "IMO9780859";
-                port.enregistrerArrivee(imo);
-                imo = "IMO9250097";
-                port.enregistrerArrivee(imo);
-                imo = "IMO9250096";
-                port.enregistrerArrivee(imo);
-
-                Console.WriteLine(port);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        public static void TestEnregistrerTropTanker()
-        {
-            try
-            {
-                // PORT
-                Port port = new Port("Marseille", "43.2976N", "5.3471E", 4, 3, 2, 4);
-                // NAVIRES
-                port.enregistrerArriveePrevue(new Tanker("IMO9250096", "Tanker1", "54.35412N", "5.3644", 110000, 110000, 0, "Petrole"));
-                port.enregistrerArriveePrevue(new Tanker("IMO9250095", "Tanker2", "54.35412N", "5.3644", 110000, 110000, 0, "Petrole"));
-                port.enregistrerArriveePrevue(new Tanker("IMO9250094", "Tanker3", "54.35412N", "5.3644", 110000, 110000, 0, "Petrole"));
-                // ENREGISTREMENT
-                port.enregistrerArrivee("IMO9250096");
-                port.enregistrerArrivee("IMO9250095");
-                port.enregistrerArrivee("IMO9250094");
-
-                Console.WriteLine(port);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        public static void TestDistance()
-        {
-            try
-            {
-                // PORT
-                Port port = new Port("Marseille", "43.2976N", "5.3471E", 4, 3, 2, 4);
-                // NAVIRES
-                Cargo navire = new Cargo("IMO9250098", "CONTAINERSHIPS VII", "54.35412N", "5.3644", 10499, 56000, 60000, "Porte-conteneurs");
-                port.enregistrerArriveePrevue(new Tanker("IMO9250096", "Tanker1", "54.35412N", "5.3644", 110000, 110000, 0, "Petrole"));
                 port.enregistrerArriveePrevue(navire);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
 
-                Console.WriteLine(port.GetMilesToArrival(navire));
+        public static void TestEnregistrerArrivee(Port port, String imo)
+        {
+            try
+            {
+                port.enregistrerArrivee(imo);
+                Console.WriteLine("Navire " + imo + " arrivé");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public static void TesterEnregistrerDepart(Port port, String imo)
+        {
+            try
+            {
+                port.enregistrerDepart(imo);
+                Console.WriteLine("Navire " + imo + " parti");
             }
             catch (Exception ex)
             {
