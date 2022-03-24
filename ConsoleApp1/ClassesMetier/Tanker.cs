@@ -1,10 +1,14 @@
 ﻿using GestionNavire.Exceptions;
 using Station.Interfaces;
+using System;
+using System.Configuration;
 
 namespace NavireHeritage.ClassesMetier
 {
     public class Tanker : Navire, INavCommercable
     {
+        private static readonly int valueTanker = Convert.ToInt32(ConfigurationManager.AppSettings["ValueLimitTanker"]);
+        //private int ValueTanker = 130000;
         private readonly string typeFluide;
 
         public Tanker(string imo, string nom, string latitude, string longitude, int tonnageActuel, int tonnageDT, int tonnageDWT, string typeFluide)
@@ -54,5 +58,8 @@ namespace NavireHeritage.ClassesMetier
         {
             return string.Format(base.ToString() + this.typeFluide);
         }
+        public bool IsSuperTanker => this.TonnageDT > valueTanker;
+
+        public static int ValueTanker => valueTanker;
     }
 }

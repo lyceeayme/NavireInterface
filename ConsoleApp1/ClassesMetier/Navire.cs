@@ -86,5 +86,30 @@ namespace NavireHeritage.ClassesMetier
                 "{0}\t{1} : ",this.imo,this.nom
                 );
         }
+
+        public bool EstMemeTypeStrict(Navire navire)
+        {
+            bool retour = false;
+            if (this.GetType().FullName == navire.GetType().FullName)
+            {
+                // on sait que les navires sont de la même classe
+                // On gère le cas particulier des supertanker
+                if ( this is Tanker)
+                {
+                    Tanker t = (Tanker)this;
+                    Tanker v = (Tanker)navire;
+                    // ils sont du même type strict si ils sont tous les deux tankers ou tous les deux super tanker
+                    if ((t.IsSuperTanker && v.IsSuperTanker) || (!t.IsSuperTanker &!v.IsSuperTanker))
+                    {
+                        retour = true;
+                    }
+                }
+                else
+                {
+                    retour = true;
+                }
+            }     
+            return retour;
+        }
     }
 }

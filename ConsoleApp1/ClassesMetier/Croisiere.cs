@@ -68,6 +68,17 @@ namespace NavireHeritage.ClassesMetier
             }
         }
 
+        /// <summary>
+        /// Cette méthode essaye d'embarquer seulement les passagers qui peuvent être embarqués.
+        /// Le Test de la capacité maximum se fait à la fin et sur la liste des passagers embarquable.
+        /// </summary>
+        /// <param name="pPassagers">Liste des passagers</param>
+        /// <returns>La liste des passagers ne pouvant pas être embarqués.</returns>
+        public List<Object> EmbarquerMieux(List<Object> pPassagers)
+        {
+            return null;
+        }
+
         public List<Passager> debarquer(List<Passager> pPassagers)
         {
             List<Passager> inconnu = new List<Passager>();
